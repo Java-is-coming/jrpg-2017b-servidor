@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/XXX/jrpg-2017b-servidor.svg?branch=master)](https://travis-ci.org/XXX/jrpg-2017b-servidor)
+[![Build Status](https://travis-ci.org/Java-is-coming/jrpg-2017b-servidor.svg?branch=master)](https://travis-ci.org/Java-is-coming/jrpg-2017b-servidor)
 # World Of Middle Earth (WOME) - servidor
 
 ## Sobre las personas
@@ -12,14 +12,11 @@
 
 ### Integrantes del equipo
 
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
-* Completar ([xxxx](https://github.com/xxxx))
+* Rodrigo Calvo ([RodrigoCalvo](https://github.com/RodrigoCalvo))
+* Gustavo Celestino ([GustavoCelestino](https://github.com/GustavoCelestino))
+* Gabriel Maciel ([gabriel-maciel](https://github.com/gabriel-maciel))
+* Julián Martínez ([julianariel](https://github.com/julianariel))
+* Manuel Chinchi ([manuel-37](https://github.com/manuel-37))
 
 ## Sobre la tecnología
 * Java 1.8
