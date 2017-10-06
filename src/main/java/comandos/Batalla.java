@@ -31,7 +31,9 @@ public class Batalla extends ComandosServer {
 			{
 				Servidor.getPersonajesConectados().get(escuchaCliente.getPaqueteBatalla().getIdEnemigo())
 				.setEstado(Estado.estadoBatalla);
+				
 			} else {
+				
 				Servidor.getNPsCreados().get(escuchaCliente.getPaqueteBatalla().getIdEnemigo())
 				.setEstado(Estado.estadoBatalla);
 			}
