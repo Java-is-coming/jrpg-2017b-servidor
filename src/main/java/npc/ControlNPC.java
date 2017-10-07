@@ -12,8 +12,8 @@ public class ControlNPC {
 
 	public static void generarNPCs() {
 		try {			
-			int[] x = new int[] {10, 736, 1100, 1504, -1056, 1120, 2176, 992, -928, 0};
-			int[] y = new int[] {500, 760, 672, 1104, 1008, 1456, 1120, 1744, 1456, 2240};
+			int[] x = new int[] {10, 736, 1100, 1504, -1176, 1120, 2176, 992, -928, 0};
+			int[] y = new int[] {500, 760, 672, 1104, 1038, 1456, 1120, 1744, 1456, 2240};
 			String[] nombres = new String[] {"White walker", "Paul walker", "Medusa", "Kraken", "Ifrit", "Leviatan", "Minotauro", "Illidan", "Arthas", "Jon Snow"};
 			
 			for (int i = 1; i <= 10; i++) {
