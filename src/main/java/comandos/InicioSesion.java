@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import mensajeria.Comando;
 import mensajeria.Paquete;
+import mensajeria.PaqueteDeNPCs;
 import mensajeria.PaquetePersonaje;
 import mensajeria.PaqueteUsuario;
 import servidor.Servidor;
@@ -29,6 +30,10 @@ public class InicioSesion extends ComandosServer {
 				escuchaCliente.setIdPersonaje(paquetePersonaje.getId());
 
 				escuchaCliente.getSalida().writeObject(gson.toJson(paquetePersonaje));
+				
+				PaqueteDeNPCs pdn = (PaqueteDeNPCs) new PaqueteDeNPCs(Servidor.getNPsCreados()).clone();
+				pdn.setComando(Comando.ACTUALIZARNPCS);				
+				escuchaCliente.getSalida().writeObject(gson.toJson(pdn));	
 
 			} else {
 				paqueteSv.setMensaje(Paquete.msjFracaso);
