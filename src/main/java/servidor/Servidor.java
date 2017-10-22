@@ -184,6 +184,19 @@ public class Servidor extends Thread {
 	}
 
 	public static boolean mensajeAUsuario(PaqueteMensaje pqm) {
+
+		for (Map.Entry<Integer, PaquetePersonaje> personaje : personajesConectados.entrySet()) {
+			if(personaje.getValue().getNombre().equals(pqm.getUserReceptor())) {				
+				Servidor.log.append(pqm.getUserEmisor() + " envió un mensaje a " + pqm.getUserReceptor() + System.lineSeparator());
+				return true;
+			}
+		}
+
+		Servidor.log.append(pqm.getUserEmisor() + " NO envió un mensaje a " + pqm.getUserReceptor() + " ya que este se encuentra desconectado" + System.lineSeparator());
+		return false;
+		
+		/*
+		 * Código viejo
 		boolean result = true;
 		boolean noEncontro = true;
 		for (Map.Entry<Integer, PaquetePersonaje> personaje : personajesConectados.entrySet()) {
@@ -197,15 +210,31 @@ public class Servidor extends Thread {
 		// Si existe inicio sesion
 		if (result) {
 			Servidor.log.append(pqm.getUserEmisor() + " envió mensaje a " + pqm.getUserReceptor() + System.lineSeparator());
-				return true;
+			return true;
 		} else {
 			// Si no existe informo y devuelvo false
 			Servidor.log.append("El mensaje para " + pqm.getUserReceptor() + " no se envió, ya que se encuentra desconectado." + System.lineSeparator());
 			return false;
 		}
+		*/
 	}
 	
-	public static boolean mensajeAAll(int contador) {
+	public static boolean mensajeAAll(PaqueteMensaje pqm, int contador) {
+		int personajesConectadosQty = personajesConectados.size();
+		
+		if (personajesConectadosQty == contador) {
+			Servidor.log.append(pqm.getUserEmisor() + " ha enviado un mensaje a todos los usuarios" + System.lineSeparator());
+			return true;			
+		} else if (personajesConectadosQty > contador) {
+			Servidor.log.append("Se ha/n conectado " + (personajesConectadosQty - contador) + " nuevo/s usuario/s. " + pqm.getUserEmisor() + " ha enviado un mensaje a todos los restantes" + System.lineSeparator());
+			return false;					
+		} else {
+			Servidor.log.append("Se ha/n desconectado " + (contador - personajesConectadosQty) + " usuario/s. " + pqm.getUserEmisor() + " ha enviado un mensaje a todos los restantes" + System.lineSeparator());
+			return false;					
+		}
+		
+		/*
+		 * Codigo viejo
 		boolean result = true;
 		if(personajesConectados.size() != contador+1) {
 			result = false;
@@ -213,12 +242,14 @@ public class Servidor extends Thread {
 		// Si existe inicio sesion
 		if (result) {
 			Servidor.log.append("Se ha enviado un mensaje a todos los usuarios" + System.lineSeparator());
-				return true;
+			return true;
 		} else {
 			// Si no existe informo y devuelvo false
-			Servidor.log.append("Uno o más de todos los usuarios se ha desconectado, se ha mandado el mensaje a los demas." + System.lineSeparator());
+			Servidor.log.append("Uno o más de todos los usuarios se ha desconectado, se ha mandado el mensaje a los demas." 
+					+ System.lineSeparator());
 			return false;
 		}
+		*/
 	}
 	
 	public static ArrayList<EscuchaCliente> getClientesConectados() {
