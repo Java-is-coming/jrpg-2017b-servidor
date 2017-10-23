@@ -13,7 +13,7 @@ import mensajeria.PaqueteUsuario;
 import servidor.Conector;
 import servidor.Servidor;
 
-public class TestConector {
+ public class TestConector {
 	
 	private String getRandomString() {
         String SALTCHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";

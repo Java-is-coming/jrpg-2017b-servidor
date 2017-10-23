@@ -6,21 +6,30 @@ import mensajeria.PaqueteAtacar;
 import servidor.EscuchaCliente;
 import servidor.Servidor;
 
+/**
+ * Comando para atacar en una batallla
+ *
+ *
+ */
 public class Atacar extends ComandosServer {
 
-	@Override
-	public void ejecutar() {
-		escuchaCliente.setPaqueteAtacar((PaqueteAtacar) gson.fromJson(cadenaLeida, PaqueteAtacar.class));
-		for(EscuchaCliente conectado : Servidor.getClientesConectados()) {
-			if(conectado.getIdPersonaje() == escuchaCliente.getPaqueteAtacar().getIdEnemigo()) {
-				try {
-					conectado.getSalida().writeObject(gson.toJson(escuchaCliente.getPaqueteAtacar()));
-				} catch (IOException e) {
-					Servidor.log.append("Falló al intentar enviar ataque a:" + conectado.getPaquetePersonaje().getId() + "\n");
-				}
-			}
-		}
+    /**
+     * Ejecución de comando
+     */
+    @Override
+    public void ejecutar() {
+        getEscuchaCliente().setPaqueteAtacar(gson.fromJson(cadenaLeida, PaqueteAtacar.class));
+        for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
+            if (conectado.getIdPersonaje() == getEscuchaCliente().getPaqueteAtacar().getIdEnemigo()) {
+                try {
+                    conectado.getSalida().writeObject(gson.toJson(getEscuchaCliente().getPaqueteAtacar()));
+                } catch (final IOException e) {
+                    Servidor.getLog().append(
+                            "Falló al intentar enviar ataque a:" + conectado.getPaquetePersonaje().getId() + "\n");
+                }
+            }
+        }
 
-	}
+    }
 
 }

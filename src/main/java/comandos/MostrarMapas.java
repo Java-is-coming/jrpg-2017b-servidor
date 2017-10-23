@@ -3,13 +3,22 @@ package comandos;
 import mensajeria.PaquetePersonaje;
 import servidor.Servidor;
 
-public class MostrarMapas extends ComandosServer{
+/**
+ * Comando para mostrar la lista de mapas.
+ *
+ */
+public class MostrarMapas extends ComandosServer {
 
-	@Override
-	public void ejecutar() {
-		escuchaCliente.setPaquetePersonaje((PaquetePersonaje) gson.fromJson(cadenaLeida, PaquetePersonaje.class));
-		Servidor.log.append(escuchaCliente.getSocket().getInetAddress().getHostAddress() + " ha elegido el mapa " + escuchaCliente.getPaquetePersonaje().getMapa() + System.lineSeparator());
-		
-	}
+    /**
+     * Ejecución del comando
+     */
+    @Override
+    public void ejecutar() {
+        getEscuchaCliente().setPaquetePersonaje(gson.fromJson(cadenaLeida, PaquetePersonaje.class));
+        final int mapa = getEscuchaCliente().getPaquetePersonaje().getMapa();
+        final String hostAddress = getEscuchaCliente().getSocket().getInetAddress().getHostAddress();
+        Servidor.getLog().append(hostAddress + " ha elegido el mapa " + mapa + System.lineSeparator());
+
+    }
 
 }
