@@ -31,19 +31,19 @@ public class FinalizarBatalla extends ComandosServer {
             if (paqueteFinalizarBatalla.getTipoBatalla() == PaqueteBatalla.batallarPersonaje) {
                 Servidor.getConector().actualizarInventario(paqueteFinalizarBatalla.getGanadorBatalla());
                 Servidor.getPersonajesConectados().get(paqueteFinalizarBatalla.getIdEnemigo())
-                        .setEstado(Estado.estadoJuego);
+                        .setEstado(Estado.ESTADO_JUEGO);
             } else {
 
                 // Si gana el NPC, lo volvemos a estado juego
                 if (paqueteFinalizarBatalla.getGanadorBatalla() == paqueteFinalizarBatalla.getIdEnemigo()) {
-                    Servidor.getNPsCreados().get(paqueteFinalizarBatalla.getIdEnemigo()).setEstado(Estado.estadoJuego);
+                    Servidor.getNPsCreados().get(paqueteFinalizarBatalla.getIdEnemigo()).setEstado(Estado.ESTADO_JUEGO);
                 } else {
                     Servidor.getNPsCreados().remove(paqueteFinalizarBatalla.getIdEnemigo());
                 }
             }
 
             Servidor.getPersonajesConectados().get(getEscuchaCliente().getPaqueteFinalizarBatalla().getId())
-                    .setEstado(Estado.estadoJuego);
+                    .setEstado(Estado.ESTADO_JUEGO);
 
             for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
 

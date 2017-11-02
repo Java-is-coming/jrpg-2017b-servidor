@@ -35,7 +35,7 @@ public class InicioSesion extends ComandosServer {
                 PaquetePersonaje paquetePersonaje = new PaquetePersonaje();
                 paquetePersonaje = Servidor.getConector().getPersonaje(getEscuchaCliente().getPaqueteUsuario());
                 paquetePersonaje.setComando(Comando.INICIOSESION);
-                paquetePersonaje.setMensaje(Paquete.msjExito);
+                paquetePersonaje.setMensaje(Paquete.MSJ_EXITO);
                 getEscuchaCliente().setIdPersonaje(paquetePersonaje.getId());
 
                 getEscuchaCliente().getSalida().writeObject(gson.toJson(paquetePersonaje));
@@ -45,7 +45,7 @@ public class InicioSesion extends ComandosServer {
                 getEscuchaCliente().getSalida().writeObject(gson.toJson(pdn));
 
             } else {
-                paqueteSv.setMensaje(Paquete.msjFracaso);
+                paqueteSv.setMensaje(Paquete.MSJ_FRACASO);
                 getEscuchaCliente().getSalida().writeObject(gson.toJson(paqueteSv));
             }
         } catch (final IOException e) {
