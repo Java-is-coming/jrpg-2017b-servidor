@@ -37,7 +37,7 @@ public class AtencionConexiones extends Thread {
                     // Le reenvio la conexion a todos
                     for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
 
-                        if (conectado.getPaquetePersonaje().getEstado() != Estado.estadoOffline) {
+                        if (conectado.getPaquetePersonaje().getEstado() != Estado.ESTADO_OFFLINE) {
 
                             final PaqueteDePersonajes pdp = (PaqueteDePersonajes) new PaqueteDePersonajes(
                                     Servidor.getPersonajesConectados()).clone();

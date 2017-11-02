@@ -24,7 +24,7 @@ public class ActualizarNPCs extends ComandosServer {
         // Voy a mandarle todos los NPC's a los usuarios logueados en estado juego
         for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
 
-            if (conectado.getPaquetePersonaje().getEstado() == Estado.estadoJuego) {
+            if (conectado.getPaquetePersonaje().getEstado() == Estado.ESTADO_JUEGO) {
 
                 try {
 
