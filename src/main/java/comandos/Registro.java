@@ -27,12 +27,12 @@ public class Registro extends ComandosServer {
         // Si el usuario se pudo registrar le envio un msj de exito
         try {
             if (Servidor.getConector().registrarUsuario(getEscuchaCliente().getPaqueteUsuario())) {
-                paqueteSv.setMensaje(Paquete.msjExito);
+                paqueteSv.setMensaje(Paquete.MSJ_EXITO);
                 getEscuchaCliente().getSalida().writeObject(gson.toJson(paqueteSv));
 
                 // Si el usuario no se pudo registrar le envio un msj de fracaso
             } else {
-                paqueteSv.setMensaje(Paquete.msjFracaso);
+                paqueteSv.setMensaje(Paquete.MSJ_FRACASO);
                 getEscuchaCliente().getSalida().writeObject(gson.toJson(paqueteSv));
             }
         } catch (final IOException e) {

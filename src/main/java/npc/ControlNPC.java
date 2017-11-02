@@ -40,7 +40,7 @@ public final class ControlNPC {
                 final NonPlayableCharacter npcChar = new NonPlayableCharacter(nombres[i - 1], i, i - 1);
 
                 npc.setNombre(npcChar.getNombre());
-                npc.setEstado(Estado.estadoJuego);
+                npc.setEstado(Estado.ESTADO_JUEGO);
                 npc.setId(i);
 
                 npc.setFrame(1);
