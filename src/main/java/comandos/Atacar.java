@@ -13,23 +13,24 @@ import servidor.Servidor;
  */
 public class Atacar extends ComandosServer {
 
-    /**
-     * Ejecución de comando
-     */
-    @Override
-    public void ejecutar() {
-        getEscuchaCliente().setPaqueteAtacar(gson.fromJson(cadenaLeida, PaqueteAtacar.class));
-        for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
-            if (conectado.getIdPersonaje() == getEscuchaCliente().getPaqueteAtacar().getIdEnemigo()) {
-                try {
-                    conectado.getSalida().writeObject(gson.toJson(getEscuchaCliente().getPaqueteAtacar()));
-                } catch (final IOException e) {
-                    Servidor.getLog().append(
-                            "Falló al intentar enviar ataque a:" + conectado.getPaquetePersonaje().getId() + "\n");
-                }
-            }
-        }
+	/**
+	 * Ejecución de comando
+	 */
+	@Override
+	public void ejecutar() {
+		getEscuchaCliente().setPaqueteAtacar(gson.fromJson(cadenaLeida, PaqueteAtacar.class));
+		for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
+			if (conectado.getIdPersonaje() == getEscuchaCliente().getPaqueteAtacar().getIdEnemigo()) {
+				try {
+					conectado.getSalida().writeObject(gson.toJson(getEscuchaCliente().getPaqueteAtacar()));
+				} catch (final IOException e) {
+					Servidor.getLog().append(
+							"Falló al intentar enviar ataque a:" + conectado.getPaquetePersonaje().getId() + "\n");
+				}
+			}
 
-    }
+		}
+
+	}
 
 }
