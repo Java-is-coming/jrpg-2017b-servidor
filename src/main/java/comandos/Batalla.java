@@ -14,7 +14,6 @@ import servidor.Servidor;
  *
  */
 public class Batalla extends ComandosServer {
-
 	/**
 	 * Ejecucion del comando
 	 */
@@ -34,7 +33,7 @@ public class Batalla extends ComandosServer {
 			getEscuchaCliente().getPaqueteBatalla().setMiTurno(true);
 			getEscuchaCliente().getSalida().writeObject(gson.toJson(getEscuchaCliente().getPaqueteBatalla()));
 
-			if (getEscuchaCliente().getPaqueteBatalla().getTipoBatalla() == PaqueteBatalla.batallarPersonaje) {
+			if (getEscuchaCliente().getPaqueteBatalla().getTipoBatalla() == PaqueteBatalla.BATALLAR_PERSONAJE) {
 				Servidor.getPersonajesConectados().get(getEscuchaCliente().getPaqueteBatalla().getIdEnemigo())
 						.setEstado(Estado.ESTADO_BATALLA);
 
@@ -46,7 +45,7 @@ public class Batalla extends ComandosServer {
 
 			for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
 
-				if (getEscuchaCliente().getPaqueteBatalla().getTipoBatalla() == PaqueteBatalla.batallarPersonaje) {
+				if (getEscuchaCliente().getPaqueteBatalla().getTipoBatalla() == PaqueteBatalla.BATALLAR_PERSONAJE) {
 					if (conectado.getIdPersonaje() == getEscuchaCliente().getPaqueteBatalla().getIdEnemigo()) {
 						final int aux = getEscuchaCliente().getPaqueteBatalla().getId();
 						final int idEnemigo = getEscuchaCliente().getPaqueteBatalla().getIdEnemigo();
@@ -72,6 +71,5 @@ public class Batalla extends ComandosServer {
 		synchronized (Servidor.getAtencionConexiones()) {
 			Servidor.getAtencionConexiones().notify();
 		}
-
 	}
 }

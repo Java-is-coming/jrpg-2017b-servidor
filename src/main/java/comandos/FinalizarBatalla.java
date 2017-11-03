@@ -28,7 +28,7 @@ public class FinalizarBatalla extends ComandosServer {
 
             getEscuchaCliente().setPaqueteFinalizarBatalla(paqueteFinalizarBatalla);
 
-            if (paqueteFinalizarBatalla.getTipoBatalla() == PaqueteBatalla.batallarPersonaje) {
+            if (paqueteFinalizarBatalla.getTipoBatalla() == PaqueteBatalla.BATALLAR_PERSONAJE) {
                 Servidor.getConector().actualizarInventario(paqueteFinalizarBatalla.getGanadorBatalla());
                 Servidor.getPersonajesConectados().get(paqueteFinalizarBatalla.getIdEnemigo())
                         .setEstado(Estado.ESTADO_JUEGO);
@@ -47,7 +47,7 @@ public class FinalizarBatalla extends ComandosServer {
 
             for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
 
-                if (paqueteFinalizarBatalla.getTipoBatalla() == PaqueteBatalla.batallarPersonaje) {
+                if (paqueteFinalizarBatalla.getTipoBatalla() == PaqueteBatalla.BATALLAR_PERSONAJE) {
                     if (conectado.getIdPersonaje() == getEscuchaCliente().getPaqueteFinalizarBatalla().getIdEnemigo()) {
                         try {
                             final String paquete = gson.toJson(getEscuchaCliente().getPaqueteFinalizarBatalla());
