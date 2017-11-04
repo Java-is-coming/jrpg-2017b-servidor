@@ -20,28 +20,37 @@ import dominio.Mochila;
 import mensajeria.PaquetePersonaje;
 import mensajeria.PaqueteUsuario;
 
+/**
+ * Clase encargada de la comunicacion con hibernate
+ */
 public class ConectorHibernate {
 
-    SessionFactory factory;
+    private SessionFactory factory;
 
+    /**
+     * Efectua la conexion
+     */
     public void connect() {
         try {
             Servidor.getLog().append("Estableciendo conexión con la base de datos..." + System.lineSeparator());
 
             final Configuration cfg = new Configuration();
             cfg.configure("hibernate.cfg.xml");
-            this.factory = cfg.buildSessionFactory();
+            this.setFactory(cfg.buildSessionFactory());
 
             Servidor.getLog().append("Conexión con la base de datos establecida con éxito." + System.lineSeparator());
         } catch (final Exception ex) {
-            Servidor.getLog().append("Fallo al intentar establecer la conexión con la base de datos. " + ex.getMessage()
-                    + System.lineSeparator());
+            final String msg = ex.getMessage();
+            Servidor.getLog().append("Fallo al conectar con la base de datos. " + msg + System.lineSeparator());
         }
     }
 
+    /**
+     * Cierra la conexion
+     */
     public void close() {
         try {
-            this.factory.close();
+            this.getFactory().close();
         } catch (final Exception ex) {
             Servidor.getLog()
                     .append("Error al intentar cerrar la conexión con la base de datos." + System.lineSeparator());
@@ -49,17 +58,26 @@ public class ConectorHibernate {
         }
     }
 
-    /* ABAJO DE ACA YA CON HIBERNATE PAPA */
-    public PaquetePersonaje getPersonaje(PaqueteUsuario paqueteUsuario) throws IOException {
+    /**
+     * Get de personaje
+     *
+     * @param pU
+     *            usuario a buscar
+     * @return PaquetePersonaje personaje obtenido
+     * @throws IOException
+     *             error
+     */
+    public PaquetePersonaje getPersonaje(final PaqueteUsuario pU) throws IOException {
         PaquetePersonaje paquetePersonaje = null;
         Session session = null;
         int i = 2;
         int j = 0;
 
+        PaqueteUsuario paqueteUsuario = null;
         try {
-            paqueteUsuario = getUsuario(paqueteUsuario.getUsername());
+            paqueteUsuario = getUsuario(pU.getUsername());
 
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             // Personaje
             final CriteriaBuilder cbPersonaje = session.getCriteriaBuilder();
@@ -80,7 +98,8 @@ public class ConectorHibernate {
             final CriteriaQuery<Item> cqItem = cbItem.createQuery(Item.class);
             final Root<Item> rpItem = cqItem.from(Item.class);
 
-            while (j <= 9) {
+            final int maxItems = 9;
+            while (j <= maxItems) {
                 if (mochila.getById(i) != -1) {
                     cqItem.select(rpItem).where(cbItem.equal(rpItem.get("idItem"), mochila.getById(i)));
                     final Item item = session.createQuery(cqItem).getSingleResult();
@@ -106,12 +125,19 @@ public class ConectorHibernate {
         return paquetePersonaje;
     }
 
+    /**
+     * Login
+     *
+     * @param user
+     *            usuario a loguear
+     * @return boolean resultado
+     */
     public boolean loguearUsuario(final PaqueteUsuario user) {
         boolean resultado = false;
         Session session = null;
 
         try {
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             final CriteriaBuilder cb = session.getCriteriaBuilder();
             final CriteriaQuery<PaqueteUsuario> cq = cb.createQuery(PaqueteUsuario.class);
@@ -123,6 +149,7 @@ public class ConectorHibernate {
                 resultado = session.createQuery(cq).getSingleResult() != null;
             } catch (final NoResultException nre) {
                 // Ignore this because as per your logic this is ok!
+                Servidor.getLog().append(System.lineSeparator());
             }
 
         } catch (final Exception e) {
@@ -137,13 +164,20 @@ public class ConectorHibernate {
         return resultado;
     }
 
+    /**
+     * Registrar usuario
+     *
+     * @param user
+     *            paquete usuario
+     * @return boolean resultado
+     */
     public boolean registrarUsuario(final PaqueteUsuario user) {
         boolean resultado = false;
         Session session = null;
         Transaction tx = null;
 
         try {
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             final CriteriaBuilder cb = session.getCriteriaBuilder();
             final CriteriaQuery<PaqueteUsuario> cq = cb.createQuery(PaqueteUsuario.class);
@@ -155,7 +189,7 @@ public class ConectorHibernate {
             try {
                 yaExiste = session.createQuery(cq).getSingleResult() != null;
             } catch (final NoResultException nre) {
-                // Ignore this because as per your logic this is ok!
+                Servidor.getLog().append(System.lineSeparator());
             }
 
             if (!yaExiste) {
@@ -181,12 +215,21 @@ public class ConectorHibernate {
         return resultado;
     }
 
+    /**
+     * Registrar personaje
+     *
+     * @param paquetePersonaje
+     *            personaje a registrar
+     * @param paqueteUsuario
+     *            usuario del personaje a registrar
+     * @return boolean resultado
+     */
     public boolean registrarPersonaje(final PaquetePersonaje paquetePersonaje, final PaqueteUsuario paqueteUsuario) {
         Session session = null;
         boolean resultado = false;
 
         try {
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             // Personaje
             session.save(paquetePersonaje);
@@ -223,10 +266,16 @@ public class ConectorHibernate {
         return resultado;
     }
 
+    /**
+     * Actualizar personaje
+     *
+     * @param paquetePersonaje
+     *            paquete de personaje a actualizar
+     */
     public void actualizarPersonaje(final PaquetePersonaje paquetePersonaje) {
         Session session = null;
         try {
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             // Personaje
             session.update(paquetePersonaje);
@@ -248,7 +297,8 @@ public class ConectorHibernate {
                 int i = 2;
                 int j = 1;
 
-                while (j <= 9) {
+                final int maxItems = 9;
+                while (j <= maxItems) {
                     if (mochila.getById(i) != -1) {
                         cqItem.select(rpItem).where(cbItem.equal(rpItem.get("idItem"), mochila.getById(i)));
                         final Item item = session.createQuery(cqItem).getSingleResult();
@@ -278,17 +328,23 @@ public class ConectorHibernate {
         }
     }
 
+    /**
+     * Actualizar nuevo nivel
+     *
+     * @param paquetePersonaje
+     *            personaje a actualizar
+     */
     public void actualizarPersonajeSubioNivel(final PaquetePersonaje paquetePersonaje) {
         Session session = null;
         try {
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             // Personaje
             session.update(paquetePersonaje);
 
             Servidor.getLog().append("El personaje " + paquetePersonaje.getNombre() + " se ha actualizado con éxito."
                     + System.lineSeparator());
-            ;
+
         } catch (final Exception e) {
             Servidor.getLog().append("Fallo al intentar actualizar el personaje " + paquetePersonaje.getNombre()
                     + System.lineSeparator());
@@ -299,11 +355,18 @@ public class ConectorHibernate {
         }
     }
 
+    /**
+     * Obtiene la informacion del usuario
+     *
+     * @param usuario
+     *            nombre
+     * @return PaqueteUsuario usuario
+     */
     public PaqueteUsuario getUsuario(final String usuario) {
         PaqueteUsuario paqueteUsuario = null;
         Session session = null;
         try {
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             final CriteriaBuilder cb = session.getCriteriaBuilder();
             final CriteriaQuery<PaqueteUsuario> cq = cb.createQuery(PaqueteUsuario.class);
@@ -322,10 +385,16 @@ public class ConectorHibernate {
         return paqueteUsuario;
     }
 
+    /**
+     * Actualizar inventario
+     *
+     * @param paquetePersonaje
+     *            paquete
+     */
     public void actualizarInventario(final PaquetePersonaje paquetePersonaje) {
         Session session = null;
         try {
-            session = factory.openSession();
+            session = getFactory().openSession();
 
             final Mochila mochila = new Mochila(paquetePersonaje.getId());
 
@@ -340,7 +409,7 @@ public class ConectorHibernate {
 
             Servidor.getLog().append("El personaje " + paquetePersonaje.getNombre()
                     + " ha actualizado con éxito su inventario." + System.lineSeparator());
-            ;
+
         } catch (final Exception e) {
             Servidor.getLog().append("Fallo al intentar actualizar el inventario del personaje "
                     + paquetePersonaje.getNombre() + System.lineSeparator());
@@ -351,7 +420,28 @@ public class ConectorHibernate {
         }
     }
 
+    /**
+     * Actualizar inventario
+     *
+     * @param idPersonaje
+     *            id de personaje
+     */
     public void actualizarInventario(final int idPersonaje) {
         actualizarInventario(Servidor.getPersonajesConectados().get(idPersonaje));
+    }
+
+    /**
+     * @return the factory
+     */
+    SessionFactory getFactory() {
+        return factory;
+    }
+
+    /**
+     * @param factory
+     *            the factory to set
+     */
+    void setFactory(final SessionFactory factory) {
+        this.factory = factory;
     }
 }
