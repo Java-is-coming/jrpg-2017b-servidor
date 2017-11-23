@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" 
+"http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-mapping>
+	<class name="mensajeria.PaqueteNPC" table="npc">		
+		<!-- 
+		CREATE TABLE `npc` 
+		( 
+			`id` INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, 
+			`nombre` TEXT NOT NULL, 
+			`dificultad` INT NOT NULL, 
+			`estado` INTEGER NOT NULL, 
+			`saludTope` INTEGER NOT NULL, 
+			`frame` INTEGER NOT NULL, 
+			`direccion` INTEGER NOT NULL, 
+			`posX` INTEGER NOT NULL, 
+			`posY` INTEGER NOT NULL 
+		)
+		 -->
+	 	<id name="id" type="int">
+			<column name="id" />
+			<generator class="identity" />
+		</id>
+		<property column="nombre" name="nombre" type="string" />
+		<property column="dificultad" name="dificultad" type="int" />	
+		<property column="estado" name="estado" type="int" />	
+		<property column="nivel" name="nivel" type="int" />	
+		<property column="frame" name="frame" type="int" />	
+		<property column="direccion" name="direccion" type="int" />	
+		<property column="posX" name="posX" type="int" />	
+		<property column="posY" name="posY" type="int" />		
+	</class>
+</hibernate-mapping>
