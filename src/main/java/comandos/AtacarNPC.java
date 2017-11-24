@@ -16,9 +16,7 @@ import servidor.EscuchaCliente;
 import servidor.Servidor;
 
 /**
- * Comando para atacar en una batallla
- *
- *
+ * Comando para atacar en una batallla con un NPC
  */
 public class AtacarNPC extends ComandosServer {
 
@@ -76,7 +74,7 @@ public class AtacarNPC extends ComandosServer {
                                     JOptionPane.showMessageDialog(null, "Error al crear la batalla");
                                 }
 
-                                if (enemigo.estaVivo()) {
+                                if (enemigo.estaVivo() && !paquetePersonaje.getValue().getModoDios()) {
                                     enemigo.atacar(personaje);
                                 }
 
