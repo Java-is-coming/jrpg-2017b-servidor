@@ -13,8 +13,10 @@
 			`saludTope` INTEGER NOT NULL, 
 			`frame` INTEGER NOT NULL, 
 			`direccion` INTEGER NOT NULL, 
-			`posX` INTEGER NOT NULL, 
-			`posY` INTEGER NOT NULL 
+			`maxX` INTEGER NOT NULL, 
+			`minX` INTEGER NOT NULL,
+			`maxY` INTEGER NOT NULL, 
+			`minY` INTEGER NOT NULL,
 			`secsToRespawn` INTEGER NOT NULL 
 		)
 		 -->
@@ -28,8 +30,10 @@
 		<property column="nivel" name="nivel" type="int" />	
 		<property column="frame" name="frame" type="int" />	
 		<property column="direccion" name="direccion" type="int" />	
-		<property column="posX" name="posX" type="int" />	
-		<property column="posY" name="posY" type="int" />	
+		<property column="maxX" name="maxX" type="int" />	
+		<property column="minX" name="minX" type="int" />	
+		<property column="maxY" name="maxY" type="int" />	
+		<property column="minY" name="minY" type="int" />	
 		<property column="secsToRespawn" name="secsToRespawn" type="int" />				
 	</class>
 </hibernate-mapping>

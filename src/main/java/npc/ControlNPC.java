@@ -84,8 +84,12 @@ public final class ControlNPC {
 			}
 
 			// Me fijo que no se pise con nadie
-			float npcPosX = npc.getPosX();
-			float npcPosY = npc.getPosY();
+			// float npcPosX = npc.getPosX();
+			// float npcPosY = npc.getPosY();
+			float npcPosMaxX = npc.getMaxX();
+			float npcPosMinX = npc.getMinX();
+			float npcPosMaxY = npc.getMaxY();
+			float npcPosMinY = npc.getMinY();
 
 			for (final Entry<Integer, PaqueteMovimiento> ubicacionPersonaje : Servidor.getUbicacionPersonajes()
 					.entrySet()) {
@@ -93,11 +97,32 @@ public final class ControlNPC {
 				float personajePosY = ubicacionPersonaje.getValue().getPosY();
 
 				// Calculo la distancia diagonal
-				double diagonalDis = Math
-						.sqrt(Math.pow(npcPosX - personajePosX, 2) + Math.pow(npcPosY - personajePosY, 2));
+				// double diagonalDis = Math
+				// .sqrt(Math.pow(npcPosX - personajePosX, 2) + Math.pow(npcPosY -
+				// personajePosY, 2));
+				double diagonalDis1 = Math
+						.sqrt(Math.pow(npcPosMaxX - personajePosX, 2) + Math.pow(npcPosMaxY - personajePosY, 2));
+				double diagonalDis2 = Math
+						.sqrt(Math.pow(npcPosMaxX - personajePosX, 2) + Math.pow(npcPosMinY - personajePosY, 2));
+				double diagonalDis3 = Math
+						.sqrt(Math.pow(npcPosMinX - personajePosX, 2) + Math.pow(npcPosMaxY - personajePosY, 2));
+				double diagonalDis4 = Math
+						.sqrt(Math.pow(npcPosMinX - personajePosX, 2) + Math.pow(npcPosMinY - personajePosY, 2));
 
 				// Si hay una distancia diagonal menor a 700 no lo considero válido
-				if (diagonalDis < DISTANCIA_SEGURA_A_PERSONAJE_PARA_RESPAWNEAR) {
+				if (diagonalDis1 < DISTANCIA_SEGURA_A_PERSONAJE_PARA_RESPAWNEAR) {
+					return isCreated;
+				}
+				// Si hay una distancia diagonal menor a 700 no lo considero válido
+				if (diagonalDis2 < DISTANCIA_SEGURA_A_PERSONAJE_PARA_RESPAWNEAR) {
+					return isCreated;
+				}
+				// Si hay una distancia diagonal menor a 700 no lo considero válido
+				if (diagonalDis3 < DISTANCIA_SEGURA_A_PERSONAJE_PARA_RESPAWNEAR) {
+					return isCreated;
+				}
+				// Si hay una distancia diagonal menor a 700 no lo considero válido
+				if (diagonalDis4 < DISTANCIA_SEGURA_A_PERSONAJE_PARA_RESPAWNEAR) {
 					return isCreated;
 				}
 			}

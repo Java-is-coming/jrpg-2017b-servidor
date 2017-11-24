@@ -38,7 +38,7 @@ public class ConectorHibernate {
 			Servidor.getLog().append("Estableciendo conexión con la base de datos..." + System.lineSeparator());
 
 			// Evitamos logs innecesarios.
-			java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+			java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.OFF);
 
 			final Configuration cfg = new Configuration();
 			cfg.configure("hibernate.cfg.xml");
@@ -453,7 +453,7 @@ public class ConectorHibernate {
 			final CriteriaQuery<PaqueteNPC> cq = cb.createQuery(PaqueteNPC.class);
 
 			final Root<PaqueteNPC> rp = cq.from(PaqueteNPC.class);
-			cq.select(rp).where(cb.notEqual(rp.get("posX"), 0), cb.notEqual(rp.get("posY"), 0));
+			cq.select(rp);
 
 			npcs = session.createQuery(cq).getResultList();
 
@@ -463,6 +463,7 @@ public class ConectorHibernate {
 
 				npc.setFuerza(npChar.getFuerza());
 				npc.setSaludTope(npChar.getSaludTope());
+				npc.setXYRandom();
 			}
 		} catch (final Exception e) {
 			Servidor.getLog().append("Fallo al intentar los NPC " + System.lineSeparator());
@@ -501,6 +502,7 @@ public class ConectorHibernate {
 
 			npc.setFuerza(npChar.getFuerza());
 			npc.setSaludTope(npChar.getSaludTope());
+			npc.setXYRandom();
 		} catch (final Exception e) {
 			Servidor.getLog().append("Fallo al intentar los el NPC para el ID: " + id + System.lineSeparator());
 		} finally {
@@ -539,6 +541,7 @@ public class ConectorHibernate {
 
 			npc.setFuerza(npChar.getFuerza());
 			npc.setSaludTope(npChar.getSaludTope());
+			npc.setXYRandom();
 
 		} catch (final Exception e) {
 			Servidor.getLog().append("Fallo al intentar los el NPC para el nombre: " + nombre + System.lineSeparator());
