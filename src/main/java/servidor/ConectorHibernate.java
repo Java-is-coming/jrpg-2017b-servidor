@@ -18,6 +18,7 @@ import org.hibernate.cfg.Configuration;
 import dominio.Inventario;
 import dominio.Item;
 import dominio.Mochila;
+import dominio.NonPlayableCharacter;
 import mensajeria.PaqueteNPC;
 import mensajeria.PaquetePersonaje;
 import mensajeria.PaqueteUsuario;
@@ -448,9 +449,17 @@ public class ConectorHibernate {
 			final CriteriaQuery<PaqueteNPC> cq = cb.createQuery(PaqueteNPC.class);
 
 			final Root<PaqueteNPC> rp = cq.from(PaqueteNPC.class);
-			cq.select(rp);
+			cq.select(rp).where(cb.notEqual(rp.get("posX"), 0)).where(cb.notEqual(rp.get("posY"), 0));
+
 			npcs = session.createQuery(cq).getResultList();
 
+			for (PaqueteNPC npc : npcs) {
+				NonPlayableCharacter npChar = new NonPlayableCharacter(npc.getNombre(), npc.getNivel(),
+						npc.getDificultad());
+
+				npc.setFuerza(npChar.getFuerza());
+				npc.setSaludTope(npChar.getSaludTope());
+			}
 		} catch (final Exception e) {
 			Servidor.getLog().append("Fallo al intentar los NPC " + System.lineSeparator());
 		} finally {
@@ -483,6 +492,11 @@ public class ConectorHibernate {
 			cq.select(rp).where(cb.equal(rp.get("id"), id));
 			npc = session.createQuery(cq).getSingleResult();
 
+			NonPlayableCharacter npChar = new NonPlayableCharacter(npc.getNombre(), npc.getNivel(),
+					npc.getDificultad());
+
+			npc.setFuerza(npChar.getFuerza());
+			npc.setSaludTope(npChar.getSaludTope());
 		} catch (final Exception e) {
 			Servidor.getLog().append("Fallo al intentar los el NPC para el ID: " + id + System.lineSeparator());
 		} finally {
@@ -514,6 +528,12 @@ public class ConectorHibernate {
 			final Root<PaqueteNPC> rp = cq.from(PaqueteNPC.class);
 			cq.select(rp).where(cb.equal(rp.get("nombre"), nombre));
 			npc = session.createQuery(cq).getSingleResult();
+
+			NonPlayableCharacter npChar = new NonPlayableCharacter(npc.getNombre(), npc.getNivel(),
+					npc.getDificultad());
+
+			npc.setFuerza(npChar.getFuerza());
+			npc.setSaludTope(npChar.getSaludTope());
 
 		} catch (final Exception e) {
 			Servidor.getLog().append("Fallo al intentar los el NPC para el nombre: " + nombre + System.lineSeparator());
