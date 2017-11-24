@@ -1,6 +1,7 @@
 package comandos;
 
 import java.io.IOException;
+import java.util.Date;
 
 import estados.Estado;
 import mensajeria.Comando;
@@ -40,6 +41,8 @@ public class FinalizarBatalla extends ComandosServer {
 				if (paqueteFinalizarBatalla.getGanadorBatalla() == paqueteFinalizarBatalla.getIdEnemigo()) {
 					Servidor.getNPsCreados().get(paqueteFinalizarBatalla.getIdEnemigo()).setEstado(Estado.ESTADO_JUEGO);
 				} else {
+					Servidor.getNPsCreados().get(paqueteFinalizarBatalla.getIdEnemigo()).setDeathTime(new Date());
+
 					Servidor.getNpcsARespawnear().put(paqueteFinalizarBatalla.getIdEnemigo(),
 							Servidor.getNPsCreados().get(paqueteFinalizarBatalla.getIdEnemigo()));
 					Servidor.getNPsCreados().remove(paqueteFinalizarBatalla.getIdEnemigo());

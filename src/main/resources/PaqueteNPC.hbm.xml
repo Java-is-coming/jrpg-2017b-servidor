@@ -15,6 +15,7 @@
 			`direccion` INTEGER NOT NULL, 
 			`posX` INTEGER NOT NULL, 
 			`posY` INTEGER NOT NULL 
+			`secsToRespawn` INTEGER NOT NULL 
 		)
 		 -->
 	 	<id name="id" type="int">
@@ -28,6 +29,7 @@
 		<property column="frame" name="frame" type="int" />	
 		<property column="direccion" name="direccion" type="int" />	
 		<property column="posX" name="posX" type="int" />	
-		<property column="posY" name="posY" type="int" />		
+		<property column="posY" name="posY" type="int" />	
+		<property column="secsToRespawn" name="secsToRespawn" type="int" />				
 	</class>
 </hibernate-mapping>

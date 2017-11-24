@@ -37,6 +37,9 @@ public class ConectorHibernate {
 		try {
 			Servidor.getLog().append("Estableciendo conexión con la base de datos..." + System.lineSeparator());
 
+			// Evitamos logs innecesarios.
+			java.util.logging.Logger.getLogger("org.hibernate").setLevel(Level.SEVERE);
+
 			final Configuration cfg = new Configuration();
 			cfg.configure("hibernate.cfg.xml");
 			this.setFactory(cfg.buildSessionFactory());
@@ -146,7 +149,8 @@ public class ConectorHibernate {
 			final CriteriaQuery<PaqueteUsuario> cq = cb.createQuery(PaqueteUsuario.class);
 
 			final Root<PaqueteUsuario> rp = cq.from(PaqueteUsuario.class);
-			cq.select(rp).where(cb.equal(rp.get("username"), user.getUsername()));
+			cq.select(rp).where(cb.equal(rp.get("username"), user.getUsername()),
+					cb.equal(rp.get("password"), user.getPassword()));
 
 			try {
 				resultado = session.createQuery(cq).getSingleResult() != null;
@@ -449,7 +453,7 @@ public class ConectorHibernate {
 			final CriteriaQuery<PaqueteNPC> cq = cb.createQuery(PaqueteNPC.class);
 
 			final Root<PaqueteNPC> rp = cq.from(PaqueteNPC.class);
-			cq.select(rp).where(cb.notEqual(rp.get("posX"), 0)).where(cb.notEqual(rp.get("posY"), 0));
+			cq.select(rp).where(cb.notEqual(rp.get("posX"), 0), cb.notEqual(rp.get("posY"), 0));
 
 			npcs = session.createQuery(cq).getResultList();
 
@@ -504,6 +508,7 @@ public class ConectorHibernate {
 				session.close();
 			}
 		}
+
 		return npc;
 	}
 

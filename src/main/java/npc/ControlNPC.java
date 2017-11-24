@@ -1,6 +1,7 @@
 package npc;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -18,14 +19,8 @@ import servidor.Servidor;
  *
  */
 public final class ControlNPC {
-	/*
-	 * private static final int[] X = new int[] { 10, 736, 1100, 1504, -1210, 1120,
-	 * 2176, 992, -928, -10 }; private static final int[] Y = new int[] { 500, 760,
-	 * 672, 1104, 1038, 1456, 1120, 1744, 1456, 2100 }; private static final
-	 * String[] NOMBRES = new String[] { "White Walker", "Paul Walker",
-	 * "Johnnie Walker", "Kraken", "Ifrit", "Leviatan", "Minotauro", "Illidan",
-	 * "Arthas", "Jon Snow" };
-	 */
+	private static final int DISTANCIA_SEGURA_A_PERSONAJE_PARA_RESPAWNEAR = 700;
+
 	/**
 	 * Constructor
 	 */
@@ -79,14 +74,19 @@ public final class ControlNPC {
 	public static Boolean reGenerarNPC(PaqueteNPC npc) {
 		Boolean isCreated = false;
 		try {
-			// Actualizo el NPC segun la DB
-			PaqueteNPC newNPC = Servidor.getConector().getNPC(npc.getId());
+			// Reviso que se haya cumplido el tiempo para el respawn
+			Date date = new Date();
+			long now = date.getTime();
+			long deathTime = npc.getDeathTime().getTime();
+
+			if ((now - deathTime) / 1000 < npc.getSecsToRespawn()) {
+				return isCreated;
+			}
 
 			// Me fijo que no se pise con nadie
-			float npcPosX = newNPC.getPosX();
-			float npcPosY = newNPC.getPosY();
+			float npcPosX = npc.getPosX();
+			float npcPosY = npc.getPosY();
 
-			Boolean seVen = false;
 			for (final Entry<Integer, PaqueteMovimiento> ubicacionPersonaje : Servidor.getUbicacionPersonajes()
 					.entrySet()) {
 				float personajePosX = ubicacionPersonaje.getValue().getPosX();
@@ -96,33 +96,34 @@ public final class ControlNPC {
 				double diagonalDis = Math
 						.sqrt(Math.pow(npcPosX - personajePosX, 2) + Math.pow(npcPosY - personajePosY, 2));
 
-				// Si hay una distancia diagonal menor a 100 no lo considero válido
-				if (diagonalDis < 100) {
-					seVen = true;
-					break;
+				// Si hay una distancia diagonal menor a 700 no lo considero válido
+				if (diagonalDis < DISTANCIA_SEGURA_A_PERSONAJE_PARA_RESPAWNEAR) {
+					return isCreated;
 				}
 			}
 
-			if (!seVen) {
-				Servidor.getNPsCreados().put(newNPC.getId(), newNPC);
-				Servidor.getNpcsARespawnear().remove(newNPC.getId());
+			// Actualizo el NPC segun la DB
+			PaqueteNPC newNPC = Servidor.getConector().getNPC(npc.getId());
 
-				// Le aviso a todos
-				for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
-					final PaqueteDeNPCs pdn = (PaqueteDeNPCs) new PaqueteDeNPCs(Servidor.getNPsCreados()).clone();
-					pdn.setComando(Comando.ACTUALIZARNPCS);
+			Servidor.getNPsCreados().put(newNPC.getId(), newNPC);
+			Servidor.getNpcsARespawnear().remove(newNPC.getId());
 
-					try {
+			// Le aviso a todos
+			final PaqueteDeNPCs pdn = (PaqueteDeNPCs) new PaqueteDeNPCs(Servidor.getNPsCreados()).clone();
+			pdn.setComando(Comando.ACTUALIZARNPCS);
+			for (final EscuchaCliente conectado : Servidor.getClientesConectados()) {
+				try {
+					synchronized (conectado) {
 						conectado.getSalida().writeObject(new Gson().toJson(pdn));
-					} catch (final IOException e) {
-						// TODO Auto-generated catch block
-						Servidor.getLog().append("Falló al intentar enviar los npcs actualizados."
-								+ conectado.getPaquetePersonaje().getId() + "\n");
 					}
+				} catch (final IOException e) {
+					// TODO Auto-generated catch block
+					Servidor.getLog().append("Falló al intentar enviar los npcs actualizados."
+							+ conectado.getPaquetePersonaje().getId() + "\n");
 				}
-
-				isCreated = true;
 			}
+
+			isCreated = true;
 		} catch (final Exception e) {
 			Servidor.getLog().append(
 					"Fallo re-generando NPC: " + npc.getNombre() + "(" + npc.getId() + ") " + System.lineSeparator());
