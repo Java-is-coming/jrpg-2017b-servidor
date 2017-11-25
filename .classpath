@@ -24,7 +24,7 @@
 	<classpathentry kind="lib" path="lib/hibernate-entitymanager.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate-jpa-2.1-api-1.0.0.Final.jar"/>
 	<classpathentry kind="lib" path="lib/hibernate4-sqlite-dialect-0.1.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jrpg-2017b-dominio"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/jrpg-2017b-cliente"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jrpg-2017a-cliente"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/jrpg-2017a-dominio"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
